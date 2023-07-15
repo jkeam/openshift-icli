@@ -1,6 +1,8 @@
-from kubernetes import client, config, utils
+from kubernetes import client, config, utils, watch
 from openshift.dynamic import DynamicClient
 from kubernetes.dynamic.exceptions import NotFoundError, ApiException
+from time import sleep
+from collections.abc import Callable
 
 class Api:
     def __init__(self, config, client, utils):
@@ -12,7 +14,6 @@ class Api:
         self.api_client = self.client.ApiClient()
         self.dyn_client = DynamicClient(config.new_client_from_config())
 
-
     # def get_custom_objects(self) -> list[dict]:
         # api = self.client.CustomObjectsApi()
         # ret = api.list_cluster_custom_object("packages.operators.coreos.com", "v1", "packagemanifests", pretty="false")
@@ -21,6 +22,14 @@ class Api:
     # def get_cluster_custom_object(self, group:str, version:str, plural:str, name:str) -> CustomObject:
         # api = self.client.CustomObjectsApi()
         # return CustomObject(api.get_cluster_custom_object(group, version, plural, name))
+
+    def watch(self, group:str, version:str, kind:str, namespace:str, stop_func:Callable[[dict], bool]):
+        watcher = watch.Watch()
+        func = self.dyn_client.resources.get(group=group, api_version=version, kind=kind)
+        for e in func.watch(namespace=namespace, timeout=1200, watcher=watcher):
+            sleep(5)
+            if stop_func(e):
+                watcher.stop()
 
     def list_cluster_custom_object(self, group:str, version:str, plural:str) -> list:
         return self.custom_api.list_cluster_custom_object(group, version, plural)
@@ -36,8 +45,8 @@ class Api:
         try:
             api.get(name=name, namespace=namespace)
         except NotFoundError:
-            print("Not Found")
             api.create(body=body, namespace=namespace)
+            pass
 
     def destroy_dynamic_object(self, group:str, version:str, kind:str, name:str, namespace:str) -> None:
         api = self.dyn_client.resources.get(api_version=f"{group}/{version}", kind=kind)
@@ -46,7 +55,7 @@ class Api:
             if obj:
                 api.delete(name=name, namespace=namespace)
         except NotFoundError:
-            print("Not Found")
+            pass
 
     def create_namespace_if_not_exist(self, namespace:str) -> None:
         if not self._namespace_exists(namespace):

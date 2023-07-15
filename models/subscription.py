@@ -45,6 +45,6 @@ class Subscription:
     def destroy(self) -> None:
         op = self.operator_group
 
-        ClusterServiceVersion.destroy_all(self.api, "serverless-operator")
+        ClusterServiceVersion().destroy_all(self.api, "serverless-operator")
         self.api.destroy_dynamic_object(self.group, self.version, self.kind, self.name, self.namespace)
         self.api.destroy_dynamic_object(op.group, op.version, op.kind, op.name, op.namespace)

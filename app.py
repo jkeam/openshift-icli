@@ -10,4 +10,6 @@ if __name__ == "__main__":
     api = Api(config, client, utils)
     serverless = Serverless(api)
     # serverless.install()
-    # serverless.destroy()
+    # serverless.install_serving()
+    # serverless.install_eventing()
+    serverless.destroy()

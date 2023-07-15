@@ -51,12 +51,13 @@ class Api:
     def create_namespace_if_not_exist(self, namespace:str) -> None:
         if not self._namespace_exists(namespace):
             namespace_config = client.V1Namespace(metadata=client.V1ObjectMeta(name=namespace))
-            self._create_namespace(namespace_config)
+            self.core_api.create_namespace(namespace_config)
+
+    def destroy_namespace(self, namespace:str) -> None:
+        if self._namespace_exists(namespace):
+            self.core_api.delete_namespace(namespace)
 
     # Helpers
-    def _create_namespace(self, namespace:str) -> None:
-        api_response = self.core_api.create_namespace(namespace)
-
     def _get_namespaces(self) -> list:
         return self.core_api.list_namespace(pretty=False).items
 

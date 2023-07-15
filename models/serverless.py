@@ -11,10 +11,10 @@ class ServerlessServing:
 
     def get_as_dict(self) -> dict:
         return {
-                "apiVersion": f"{self.group}/{self.version}",
-                "kind": self.kind,
-                "metadata": { "name": self.name, "namespace": self.namespace }
-                }
+                 "apiVersion": f"{self.group}/{self.version}",
+                 "kind": self.kind,
+                 "metadata": { "name": self.name, "namespace": self.namespace }
+               }
 
 class ServerlessEventing:
     def __init__(self):
@@ -26,10 +26,10 @@ class ServerlessEventing:
 
     def get_as_dict(self) -> dict:
         return {
-                "apiVersion": f"{self.group}/{self.version}",
-                "kind": self.kind,
-                "metadata": { "name": self.name, "namespace": self.namespace }
-                }
+                 "apiVersion": f"{self.group}/{self.version}",
+                 "kind": self.kind,
+                 "metadata": { "name": self.name, "namespace": self.namespace }
+               }
 
 class Serverless:
     def __init__(self, api:Api):

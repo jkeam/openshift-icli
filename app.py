@@ -1,5 +1,5 @@
 from kubernetes import client, config, utils
-from models import Serverless, Api
+from models import Serverless, Api, AmqStreams
 from urllib3 import disable_warnings, exceptions
 disable_warnings(exceptions.InsecureRequestWarning)
 
@@ -10,3 +10,7 @@ if __name__ == "__main__":
     serverless = Serverless(api)
     # serverless.install()
     # serverless.destroy()
+
+    amq_streams = AmqStreams(api)
+    amq_streams.install()
+    # amq_streams.destroy()

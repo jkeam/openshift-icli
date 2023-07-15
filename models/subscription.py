@@ -4,7 +4,7 @@ from . import PackageManifest
 from . import ClusterServiceVersion
 
 class Subscription:
-    def __init__(self, api:Api, name:str, namespace:str) -> None:
+    def __init__(self, api:Api, name:str, namespace:str="openshift-operators") -> None:
         self.api = api
         self.group = "operators.coreos.com"
         self.version = "v1alpha1"
@@ -45,6 +45,6 @@ class Subscription:
     def destroy(self) -> None:
         op = self.operator_group
 
-        ClusterServiceVersion().destroy_all(self.api, "serverless-operator")
+        ClusterServiceVersion().destroy_all(self.api, self.name)
         self.api.destroy_dynamic_object(self.group, self.version, self.kind, self.name, self.namespace)
         self.api.destroy_dynamic_object(op.group, op.version, op.kind, op.name, op.namespace)

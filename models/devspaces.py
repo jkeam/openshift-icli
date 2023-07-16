@@ -2,10 +2,10 @@ from . import Api
 from . import Subscription
 from . import ClusterServiceVersion
 
-class AmqStreams:
+class Devspaces:
     def __init__(self, api:Api):
         self.api = api
-        self.subscription = Subscription(api, "amq-streams", "kafka")
+        self.subscription = Subscription(api, "devspaces", "openshift-devspaces")
 
     def install(self):
         self.subscription.install()

@@ -41,7 +41,7 @@ class Subscription:
         self.api.create_namespace_if_not_exist(self.namespace)
 
         package_manifest = PackageManifest.find(self.api, self.name)
-        self.cluster_service_version = package_manifest.get_stable_version()
+        self.cluster_service_version = package_manifest.get_csv_version(self.channel)
 
         op = self.operator_group
         self.api.create_dynamic_object(op.group, op.version, op.kind, op.name, op.namespace, op.get_as_dict())

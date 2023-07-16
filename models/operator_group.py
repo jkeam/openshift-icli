@@ -5,11 +5,12 @@ class OperatorGroup:
         self.version = "v1"
         self.name = name
         self.namespace = namespace
+        self.spec = {}
 
     def get_as_dict(self) -> dict:
         return {
                  "apiVersion": f"{self.group}/{self.version}",
                  "kind": self.kind,
                  "metadata": {"name": self.name, "namespace": self.namespace},
-                 "spec": {}
+                 "spec": self.spec
                }

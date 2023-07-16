@@ -2,10 +2,13 @@ from . import Api
 from . import Subscription
 from . import ClusterServiceVersion
 
-class AmqStreams:
+class Odf:
     def __init__(self, api:Api):
         self.api = api
-        self.subscription = Subscription(api, "amq-streams", "kafka")
+        namespace = "openshift-storage"
+        self.subscription = Subscription(api, "odf-operator", namespace)
+        self.subscription.channel = "stable-4.12"
+        self.subscription.operator_group.spec["targetNamespaces"] = [namespace]
 
     def install(self):
         self.subscription.install()

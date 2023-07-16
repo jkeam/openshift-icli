@@ -20,7 +20,7 @@ class Subscription:
         self.cluster_service_version = ""
 
     def get_as_dict(self) -> dict:
-        return {
+        val = {
                 "apiVersion": f"{self.group}/{self.version}",
                 "kind": self.kind,
                 "metadata": { "name": self.name, "namespace": self.namespace },
@@ -32,13 +32,18 @@ class Subscription:
                     "sourceNamespace": self.catalog_source_namespace
                     }
                 }
+        if self.cluster_service_version != "":
+            val["spec"]["startingCSV"] = self.cluster_service_version
+
+        return val
 
     def install(self) -> None:
         self.api.create_namespace_if_not_exist(self.namespace)
 
         package_manifest = PackageManifest.find(self.api, self.name)
-        op = self.operator_group
+        self.cluster_service_version = package_manifest.get_stable_version()
 
+        op = self.operator_group
         self.api.create_dynamic_object(op.group, op.version, op.kind, op.name, op.namespace, op.get_as_dict())
         self.api.create_dynamic_object(self.group, self.version, self.kind, self.name, self.namespace, self.get_as_dict())
 

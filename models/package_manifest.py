@@ -4,13 +4,10 @@ class PackageManifest:
     @staticmethod
     def find(api:Api, name:str, namespace:str="default"):
         pm = PackageManifest(api.get_namespaced_custom_object("packages.operators.coreos.com", "v1", namespace, "packagemanifests", name))
-        if pm:
-            pm.stable_version = pm.get_stable_version()
         return pm
 
     def __init__(self, data:dict) -> None:
         self.data = data
-        self.stable_version = ""
 
     def get_catalog_source(self) -> str:
         return self.data["status"]["catalogSource"]
@@ -31,6 +28,6 @@ class PackageManifest:
         channels = self.data["status"]["channels"]
         stable = ""
         for csv in list(map(lambda c: {"name": c["name"], "csv": c["currentCSV"]}, channels)):
-            if csv["name"] == "stable":
-                stable = csv["csv"].replace(f"{self.get_name()}.", "")
+            if csv["name"] == name:
+                stable = csv["csv"]
         return stable

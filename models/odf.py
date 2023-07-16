@@ -1,24 +1,13 @@
 from . import Api
-from . import Subscription
-from . import ClusterServiceVersion
+from . import Operator
 
-class Odf:
-    def __init__(self, api:Api):
-        self.api = api
+class Odf(Operator):
+    def __init__(self, api:Api) -> None:
         namespace = "openshift-storage"
-        self.subscription = Subscription(api, "odf-operator", namespace)
+        super().__init__(api, "odf-operator", namespace)
         self.subscription.channel = "stable-4.12"
         self.subscription.operator_group.spec["targetNamespaces"] = [namespace]
 
-    def install(self):
-        self.subscription.install()
-        csv = ClusterServiceVersion()
-        self.api.watch(csv.group, csv.version, csv.kind, self.subscription.namespace, self._install_done)
-
-    def destroy(self):
-        self.subscription.destroy()
+    def destroy(self) -> None:
+        super().destroy()
         self.api.destroy_namespace(self.subscription.namespace)
-
-    # Helpers
-    def _install_done(self, x:dict) -> bool:
-        return x.get("raw_object", {}).get("status", {}).get("phase", "Installing") == "Succeeded"

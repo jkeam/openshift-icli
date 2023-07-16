@@ -1,4 +1,5 @@
 from .api import Api
+from .kube_object import KubeObject
 from .cluster_service_version import ClusterServiceVersion
 from .package_manifest import PackageManifest
 from .operator_group import OperatorGroup

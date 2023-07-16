@@ -8,7 +8,7 @@ config.load_kube_config()
 if __name__ == "__main__":
     api = Api(config, client, utils)
     serverless = Serverless(api)
-    # serverless.install()
+    serverless.install()
     # serverless.destroy()
 
     amq_streams = AmqStreams(api)

@@ -1,37 +1,27 @@
 from . import Api
 from . import ClusterServiceVersion
 from . import Operator
+from . import KubeObject
 
-class ServerlessServing:
+class ServerlessObject(KubeObject):
     def __init__(self) -> None:
+        super().__init__()
         self.group = "operator.knative.dev"
         self.version = "v1beta1"
+
+class ServerlessServing(ServerlessObject):
+    def __init__(self) -> None:
+        super().__init__()
         self.name = "knative-serving"
         self.namespace = "knative-serving"
         self.kind = "KnativeServing"
 
-    def get_as_dict(self) -> dict:
-        return {
-                 "apiVersion": f"{self.group}/{self.version}",
-                 "kind": self.kind,
-                 "metadata": { "name": self.name, "namespace": self.namespace }
-               }
-
-class ServerlessEventing:
+class ServerlessEventing(ServerlessObject):
     def __init__(self) -> None:
-        self.group = "operator.knative.dev"
-        self.version = "v1beta1"
+        super().__init__()
         self.name = "knative-eventing"
         self.namespace = "knative-eventing"
         self.kind = "KnativeEventing"
-
-    def get_as_dict(self) -> dict:
-        return {
-                 "apiVersion": f"{self.group}/{self.version}",
-                 "kind": self.kind,
-                 "metadata": { "name": self.name, "namespace": self.namespace }
-               }
-
 
 class Serverless(Operator):
     def __init__(self, api:Api) -> None:

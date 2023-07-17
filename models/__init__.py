@@ -1,5 +1,6 @@
 from .api import Api
 from .kube_object import KubeObject
+from .kafka_cluster import KafkaCluster
 from .cluster_service_version import ClusterServiceVersion
 from .package_manifest import PackageManifest
 from .operator_group import OperatorGroup

@@ -1,5 +1,5 @@
 from kubernetes import client, config, utils
-from models import Serverless, Api, AmqStreams, Odf, Devspaces, ServerlessEventing
+from models import Serverless, Api, AmqStreams, Odf, Devspaces, ServerlessEventing, Pipelines
 from urllib3 import disable_warnings, exceptions
 disable_warnings(exceptions.InsecureRequestWarning)
 
@@ -26,3 +26,7 @@ if __name__ == "__main__":
     devspaces = Devspaces(api)
     # devspaces.install()
     # devspaces.destroy()
+
+    pipelines = Pipelines(api)
+    # pipelines.install()
+    # pipelines.destroy()

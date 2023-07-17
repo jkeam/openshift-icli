@@ -11,3 +11,4 @@ from .serverless_eventing import ServerlessEventing
 from .amq_streams import AmqStreams
 from .odf import Odf
 from .devspaces import Devspaces
+from .pipelines import Pipelines

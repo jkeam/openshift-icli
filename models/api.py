@@ -48,6 +48,16 @@ class Api:
             api.create(body=body, namespace=namespace)
             pass
 
+    def create_or_replace_dynamic_object(self, group:str, version:str, kind:str, name:str, namespace:str, body:dict) -> None:
+        api = self.dyn_client.resources.get(api_version=f"{group}/{version}", kind=kind)
+        try:
+            existing = api.get(name=name, namespace=namespace)
+            body["metadata"]["resourceVersion"] = existing["metadata"]["resourceVersion"]
+            api.replace(body=body, namespace=namespace)
+        except NotFoundError:
+            api.create(body=body, namespace=namespace)
+            pass
+
     def destroy_dynamic_object(self, group:str, version:str, kind:str, name:str, namespace:str) -> None:
         api = self.dyn_client.resources.get(api_version=f"{group}/{version}", kind=kind)
         try:

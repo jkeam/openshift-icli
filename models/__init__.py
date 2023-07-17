@@ -7,6 +7,7 @@ from .operator_group import OperatorGroup
 from .subscription import Subscription
 from .operator import Operator
 from .serverless import Serverless
+from .serverless_eventing import ServerlessEventing
 from .amq_streams import AmqStreams
 from .odf import Odf
 from .devspaces import Devspaces

@@ -9,6 +9,7 @@ class KubeObject:
         self.kind = ""
         self.spec = None
         self.api = api
+        self.ready_text = "Ready"
 
     def get_as_dict(self) -> dict[str, str|dict[str, str]]:
         obj:dict[str, str|dict[str, str]] = {
@@ -37,5 +38,8 @@ class KubeObject:
     def _ready(self, x:dict) -> bool:
         conditions = x.get("raw_object", {}).get("status", {}).get("conditions", [])
         if len(conditions) > 0:
-            return conditions[0].get("type", "Not Ready") == "Ready"
+            datetime = conditions[0].get("lastTransitionTime", "")
+            last_conditions = list(filter(lambda c: c.get("lastTransitionTime", "") == datetime, conditions))
+            last_types = list(map(lambda c: c.get("type", "NotReady"), last_conditions))
+            return self.ready_text in last_types
         return False

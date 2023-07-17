@@ -1,8 +1,9 @@
 from . import KubeObject
+from . import Api
 
 class KafkaCluster(KubeObject):
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(self, api:Api) -> None:
+        super().__init__(api)
         self.group = "kafka.strimzi.io"
         self.version = "v1beta2"
         self.name = "my-cluster"

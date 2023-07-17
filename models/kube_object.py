@@ -1,13 +1,14 @@
 from . import Api
 
 class KubeObject:
-    def __init__(self) -> None:
+    def __init__(self, api:Api) -> None:
         self.group = ""
         self.version = ""
         self.name = ""
         self.namespace = ""
         self.kind = ""
         self.spec = None
+        self.api = api
 
     def get_as_dict(self) -> dict[str, str|dict[str, str]]:
         obj:dict[str, str|dict[str, str]] = {
@@ -20,10 +21,17 @@ class KubeObject:
 
         return obj
 
-    def wait_for_done(self, api:Api) -> None:
-        if api is None:
+    def install(self) -> None:
+        self.api.create_dynamic_object(self.group, self.version, self.kind, self.name, self.namespace, self.get_as_dict())
+        self.wait_for_done()
+
+    def destroy(self):
+        self.api.destroy_dynamic_object(self.group, self.version, self.kind, self.name, self.namespace)
+
+    def wait_for_done(self) -> None:
+        if self.api is None:
             return
-        api.watch(self.group, self.version, self.kind, self.namespace, self._ready)
+        self.api.watch(self.group, self.version, self.kind, self.namespace, self._ready)
 
     # Helpers
     def _ready(self, x:dict) -> bool:

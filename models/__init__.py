@@ -10,5 +10,6 @@ from .serverless import Serverless
 from .serverless_eventing import ServerlessEventing
 from .amq_streams import AmqStreams
 from .odf import Odf
+from .che_cluster import CheCluster
 from .devspaces import Devspaces
 from .pipelines import Pipelines

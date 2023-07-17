@@ -1,32 +1,51 @@
 from kubernetes import client, config, utils
-from models import Serverless, Api, AmqStreams, Odf, Devspaces, ServerlessEventing, Pipelines
+from models import Serverless, Api, AmqStreams, Odf, Devspaces, ServerlessEventing, Pipelines, Parser
 from urllib3 import disable_warnings, exceptions
 disable_warnings(exceptions.InsecureRequestWarning)
 
 config.load_kube_config()
 
+def configure(debug: bool, api:Api, config:dict) -> (None|Devspaces|Pipelines|Odf|Serverless|AmqStreams|ServerlessEventing):
+    name = config.get("name", "UNKNOWN")
+    if name == "UNKNOWN":
+        return None
+
+    obj = None
+    match name:
+        case "devspaces" | "devspace" | "crw":
+            obj = Devspaces(api)
+        case "pipelines" | "pipeline" | "tekton":
+            obj = Pipelines(api)
+        case "odf" | "ocs" | "storage":
+            obj = Odf(api)
+        case "serverless" | "knative":
+            obj = Serverless(api)
+        case "amqstreams" | "kafka":
+            obj = AmqStreams(api)
+        case "serverless-eventing" | "knative-kafka":
+            # TODO: Error check this.
+            #   ServerlessEventing requires Serverless and AmqStreams to have been installed.
+            obj = ServerlessEventing(api)
+        case _:
+            obj = None
+
+    if obj is None:
+        return obj
+
+    if config.get("enabled", False):
+        if debug:
+            print(f"installing {name}")
+        obj.install()
+    else:
+        if debug:
+            print(f"uninstalling {name}")
+        obj.destroy()
+    return obj
+
 if __name__ == "__main__":
+    user_config = Parser().parse()
+    debug = user_config.get("debug", False)
+
     api = Api(config, client, utils)
-    serverless = Serverless(api)
-    # serverless.install()
-    # serverless.destroy()
-
-    amq_streams = AmqStreams(api)
-    # amq_streams.install()
-    # amq_streams.destroy()
-
-    serverless_eventing = ServerlessEventing(api)
-    # serverless_eventing.install()
-    # serverless_eventing.destroy()
-
-    odf = Odf(api)
-    # odf.install()
-    # odf.destroy()
-
-    devspaces = Devspaces(api)
-    # devspaces.install()
-    # devspaces.destroy()
-
-    pipelines = Pipelines(api)
-    # pipelines.install()
-    # pipelines.destroy()
+    for operator in user_config.get("operators", []):
+        configure(debug, api, operator)

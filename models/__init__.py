@@ -1,3 +1,4 @@
+from .parser import Parser
 from .api import Api
 from .kube_object import KubeObject
 from .kafka_cluster import KafkaCluster

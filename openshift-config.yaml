@@ -1,0 +1,14 @@
+debug: true
+operators:
+  - name: devspaces
+    enabled: false
+  - name: pipelines
+    enabled: false
+  - name: odf
+    enabled: false
+  - name: serverless
+    enabled: false
+  - name: amqstreams
+    enabled: false
+  - name: serverless-eventing
+    enabled: false

@@ -1,14 +1,17 @@
-debug: true
-operators:
-  - name: devspaces
-    enabled: false
-  - name: pipelines
-    enabled: false
-  - name: odf
-    enabled: false
-  - name: serverless
-    enabled: false
-  - name: amqstreams
-    enabled: false
-  - name: serverless-eventing
-    enabled: false
+apiVersion: openshift.keam.io/v1alpha1
+kind: OpenshiftConfig
+spec:
+  debug: true
+  operators:
+    - name: devspaces
+      enabled: false
+    - name: pipelines
+      enabled: true
+    - name: odf
+      enabled: false
+    - name: serverless
+      enabled: false
+    - name: amqstreams
+      enabled: false
+    - name: serverless-eventing
+      enabled: false

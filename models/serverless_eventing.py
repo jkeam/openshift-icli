@@ -10,6 +10,7 @@ class ServerlessEventingEventing(KubeObject):
         self.name = "knative-eventing"
         self.namespace = "knative-eventing"
         self.kind = "KnativeEventing"
+        self.plural = "knative-eventings"
         self.spec = {
                 "config": {
                     "default-ch-webhook": {
@@ -30,7 +31,10 @@ class ServerlessEventingEventing(KubeObject):
     def destroy(self) -> None:
         body = self.get_as_dict()
         body["spec"] = {}
-        self.api.create_or_replace_dynamic_object(self.group, self.version, self.kind, self.name, self.namespace, body)
+
+        existing = self.api.get_namespaced_custom_object(self.group, self.version, self.namespace, self.plural, self.name)
+        if existing is not None:
+            self.api.create_or_replace_dynamic_object(self.group, self.version, self.kind, self.name, self.namespace, body)
 
 class ServerlessEventingKafka(KubeObject):
     def __init__(self, api:Api) -> None:

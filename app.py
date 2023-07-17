@@ -44,8 +44,9 @@ def configure(debug: bool, api:Api, config:dict) -> (None|Devspaces|Pipelines|Od
 
 if __name__ == "__main__":
     user_config = Parser().parse()
-    debug = user_config.get("debug", False)
+    spec = user_config.get("spec", {})
+    debug = spec.get("debug", False)
 
     api = Api(config, client, utils)
-    for operator in user_config.get("operators", []):
+    for operator in spec.get("operators", []):
         configure(debug, api, operator)

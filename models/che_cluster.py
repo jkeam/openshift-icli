@@ -16,3 +16,8 @@ class CheCluster(KubeObject):
                 "gitServices": {},
                 "networking": {}
                 }
+
+    def install(self) -> None:
+        self.api.create_dynamic_object(self.group, self.version, self.kind, self.name, self.namespace, self.get_as_dict())
+        ready = lambda x: x.get("raw_object", {}).get("status", {}).get("chePhase", "NotReady") == "Active"
+        self.api.watch(self.group, self.version, self.kind, self.namespace, ready)

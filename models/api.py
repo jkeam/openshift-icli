@@ -23,13 +23,14 @@ class Api:
         # api = self.client.CustomObjectsApi()
         # return CustomObject(api.get_cluster_custom_object(group, version, plural, name))
 
-    def watch(self, group:str, version:str, kind:str, namespace:str, stop_func:Callable[[dict], bool]):
+    def watch(self, group:str, version:str, kind:str, namespace:str, stop_func:Callable[[dict], bool]) -> None:
         watcher = watch.Watch()
         func = self.dyn_client.resources.get(group=group, api_version=version, kind=kind)
         for e in func.watch(namespace=namespace, timeout=1200, watcher=watcher):
-            sleep(5)
             if stop_func(e):
                 watcher.stop()
+            else:
+                sleep(5)
 
     def list_cluster_custom_object(self, group:str, version:str, plural:str) -> list:
         return self.custom_api.list_cluster_custom_object(group, version, plural)

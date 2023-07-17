@@ -19,7 +19,6 @@ class KubeObject:
               }
         if self.spec is not None:
             obj["spec"] = self.spec
-
         return obj
 
     def install(self) -> None:
@@ -38,8 +37,11 @@ class KubeObject:
     def _ready(self, x:dict) -> bool:
         conditions = x.get("raw_object", {}).get("status", {}).get("conditions", [])
         if len(conditions) > 0:
-            datetime = conditions[0].get("lastTransitionTime", "")
-            last_conditions = list(filter(lambda c: c.get("lastTransitionTime", "") == datetime, conditions))
+            sort_field = "lastTransitionTime"
+            sorter = lambda x: x[sort_field]
+            conditions.sort(reverse=True, key=sorter)
+            datetime = conditions[0].get(sort_field, "")
+            last_conditions = list(filter(lambda c: c.get(sort_field, "") == datetime, conditions))
             last_types = list(map(lambda c: c.get("type", "NotReady"), last_conditions))
             return self.ready_text in last_types
         return False

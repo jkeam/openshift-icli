@@ -1,3 +1,4 @@
+from kubernetes.dynamic.exceptions import ResourceNotFoundError
 from . import Api
 
 class KubeObject:
@@ -26,7 +27,10 @@ class KubeObject:
         self.wait_for_done()
 
     def destroy(self):
-        self.api.destroy_dynamic_object(self.group, self.version, self.kind, self.name, self.namespace)
+        try:
+            self.api.destroy_dynamic_object(self.group, self.version, self.kind, self.name, self.namespace)
+        except ResourceNotFoundError:
+            pass
 
     def wait_for_done(self) -> None:
         if self.api is None:

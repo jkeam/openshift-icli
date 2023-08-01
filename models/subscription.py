@@ -16,7 +16,12 @@ class Subscription:
         self.namespace = namespace
         self.catalog_source = "redhat-operators"
         self.catalog_source_namespace = "openshift-marketplace"
-        self.operator_group = OperatorGroup(name, namespace)
+
+        self.default_operator_group_name = "global-operators"
+        if namespace == "openshift-operators":
+            self.operator_group = OperatorGroup(self.default_operator_group_name, namespace)
+        else:
+            self.operator_group = OperatorGroup(name, namespace)
         self.cluster_service_version = ""
 
     def get_as_dict(self) -> dict:
@@ -44,7 +49,8 @@ class Subscription:
         self.cluster_service_version = package_manifest.get_csv_version(self.channel)
 
         op = self.operator_group
-        self.api.create_dynamic_object(op.group, op.version, op.kind, op.name, op.namespace, op.get_as_dict())
+        if op.name != self.default_operator_group_name:
+            self.api.create_dynamic_object(op.group, op.version, op.kind, op.name, op.namespace, op.get_as_dict())
         self.api.create_dynamic_object(self.group, self.version, self.kind, self.name, self.namespace, self.get_as_dict())
 
     def destroy(self) -> None:
@@ -52,4 +58,5 @@ class Subscription:
 
         ClusterServiceVersion().destroy_all(self.api, self.name)
         self.api.destroy_dynamic_object(self.group, self.version, self.kind, self.name, self.namespace)
-        self.api.destroy_dynamic_object(op.group, op.version, op.kind, op.name, op.namespace)
+        if op.name != self.default_operator_group_name:
+            self.api.destroy_dynamic_object(op.group, op.version, op.kind, op.name, op.namespace)

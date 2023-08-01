@@ -4,7 +4,7 @@ from . import KafkaCluster
 
 class AmqStreams(Operator):
     def __init__(self, api:Api) -> None:
-        super().__init__(api, "amq-streams", "kafka")
+        super().__init__(api, "amq-streams", "amq-streams-kafka")
         self.kafka = KafkaCluster(self.api)
 
     def install(self) -> None:

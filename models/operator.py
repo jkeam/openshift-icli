@@ -3,11 +3,11 @@ from . import Subscription
 from . import ClusterServiceVersion
 
 class Operator:
-    def __init__(self, api:Api, name:str, namespace:str="openshift-operators") -> None:
+    def __init__(self, api:Api, name:str, namespace:str="openshift-operators", skip_operator_group:bool=False) -> None:
         self.api = api
         self.name = name
         self.namespace = namespace
-        self.subscription = Subscription(api, name, namespace)
+        self.subscription = Subscription(api, name, namespace, skip_operator_group)
 
     def install(self) -> None:
         self.subscription.install()

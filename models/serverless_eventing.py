@@ -24,10 +24,6 @@ class ServerlessEventingEventing(KubeObject):
                     }
                 }
 
-    def install(self) -> None:
-        self.api.create_or_replace_dynamic_object(self.group, self.version, self.kind, self.name, self.namespace, self.get_as_dict())
-        self.wait_for_done()
-
     def destroy(self) -> None:
         body = self.get_as_dict()
         body["spec"] = {}

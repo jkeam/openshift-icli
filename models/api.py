@@ -41,6 +41,29 @@ class Api:
         except (NotFoundError, ApiException):
             return None
 
+    def get_secret(self, name:str, namespace:str, pretty:bool=False):
+        return self.core_api.read_namespaced_secret(name, namespace, pretty=pretty)
+
+    def create_secret(self, name:str, namespace:str, string_data:dict[str, str]):
+        secret = client.V1Secret(
+                api_version="v1",
+                kind="Secret",
+                metadata=client.V1ObjectMeta(name=name),
+                string_data=string_data)
+        try:
+            return self.core_api.create_namespaced_secret(namespace=namespace, body=secret)
+        except ApiException:
+            return None
+
+    def destroy_secret(self, name:str, namespace:str):
+        try:
+            self.core_api.delete_namespaced_secret(
+                name=name,
+                namespace=namespace,
+                body=client.V1DeleteOptions(propagation_policy="Foreground", grace_period_seconds=5))
+        except ApiException:
+            return None
+
     def create_dynamic_object(self, group:str, version:str, kind:str, name:str, namespace:str, body:dict) -> None:
         api = self.dyn_client.resources.get(api_version=f"{group}/{version}", kind=kind)
         try:

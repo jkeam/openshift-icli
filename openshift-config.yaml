@@ -6,7 +6,7 @@ spec:
     - name: devspaces
       enabled: false
     - name: pipelines
-      enabled: true
+      enabled: false
     - name: odf
       enabled: false
     - name: serverless
@@ -15,3 +15,12 @@ spec:
       enabled: false
     - name: serverless-eventing
       enabled: false
+    - name: threescale
+      enabled: false
+      spec:
+        wildcard_domain: "apps.cluster.foo.bar.example.com"
+        aws:
+          access_key_id: "AKIAIOSFODNN7EXAMPLE"
+          access_key_secret: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+          bucket_name: 3scale-demo
+          region: us-east-1

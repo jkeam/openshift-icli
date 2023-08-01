@@ -23,7 +23,7 @@ class KubeObject:
         return obj
 
     def install(self) -> None:
-        self.api.create_dynamic_object(self.group, self.version, self.kind, self.name, self.namespace, self.get_as_dict())
+        self.api.create_or_replace_dynamic_object(self.group, self.version, self.kind, self.name, self.namespace, self.get_as_dict())
         self.wait_for_done()
 
     def destroy(self):

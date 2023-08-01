@@ -1,5 +1,5 @@
 from kubernetes import client, config, utils
-from models import Serverless, Api, AmqStreams, Odf, Devspaces, ServerlessEventing, Pipelines, Parser
+from models import Serverless, Api, AmqStreams, Odf, Devspaces, ServerlessEventing, Pipelines, Parser, ThreeScale
 from urllib3 import disable_warnings, exceptions
 disable_warnings(exceptions.InsecureRequestWarning)
 
@@ -26,6 +26,8 @@ def configure(debug: bool, api:Api, config:dict) -> (None|Devspaces|Pipelines|Od
             # TODO: Error check this.
             #   ServerlessEventing requires Serverless and AmqStreams to have been installed.
             obj = ServerlessEventing(api)
+        case "3scale" | "threescale" | "three-scale":
+            obj = ThreeScale(api, config.get("spec", {}))
         case _:
             obj = None
 

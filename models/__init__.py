@@ -16,3 +16,4 @@ from .che_cluster import CheCluster
 from .devspaces import Devspaces
 from .pipelines import Pipelines
 from .three_scale import ThreeScale
+from .camelk import Camelk

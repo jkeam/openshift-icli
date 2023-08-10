@@ -1,5 +1,5 @@
 from kubernetes import client, config, utils
-from models import Serverless, Api, AmqStreams, Odf, Devspaces, ServerlessEventing, Pipelines, Parser, ThreeScale
+from models import Serverless, Api, AmqStreams, Odf, Devspaces, ServerlessEventing, Pipelines, Parser, ThreeScale, Camelk
 from urllib3 import disable_warnings, exceptions
 disable_warnings(exceptions.InsecureRequestWarning)
 
@@ -28,6 +28,8 @@ def configure(debug: bool, api:Api, config:dict) -> (None|Devspaces|Pipelines|Od
             obj = ServerlessEventing(api)
         case "3scale" | "threescale" | "three-scale":
             obj = ThreeScale(api, config.get("spec", {}))
+        case "camelk" | "camel-k":
+            obj = Camelk(api)
         case _:
             obj = None
 

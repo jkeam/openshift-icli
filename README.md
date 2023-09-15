@@ -1,4 +1,4 @@
-# OpenShift Interactive CLI
+# OpenShift Intelligent CLI
 
 Use this to install things like Operators from the CLI.
 The idea is that you can create an `openshift-config.yaml`,

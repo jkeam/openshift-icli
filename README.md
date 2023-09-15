@@ -1,6 +1,35 @@
 # OpenShift Interactive CLI
 
-Use this to install things like Operators from the CLI
+Use this to install things like Operators from the CLI.
+The idea is that you can create an `openshift-config.yaml`,
+and then run this tool and all of the operators you specified
+will be installed.
+
+Here is a simple example of the config:
+
+```yaml
+apiVersion: openshift.keam.io/v1alpha1
+kind: OpenshiftConfig
+spec:
+  debug: true
+  operators:
+    - name: devspaces
+      enabled: true
+    - name: pipelines
+      enabled: true
+    - name: odf
+      enabled: true
+    - name: serverless
+      enabled: true
+    - name: amqstreams
+      enabled: true
+    - name: serverless-eventing
+      enabled: true
+    - name: camel-k
+      enabled: true
+    - name: threescale
+      enabled: true
+```
 
 ## Prerequisite
 

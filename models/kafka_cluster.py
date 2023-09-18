@@ -11,7 +11,7 @@ class KafkaCluster(KubeObject):
         self.kind = "Kafka"
         self.spec = {
                 "kafka": {
-                    "version": "3.4.0",
+                    "version": "3.5.0",
                     "replicas": 1,
                     "listeners": [{"name": "plain", "port": 9092, "type": "internal", "tls": False},
                                   {"name": "tls", "port": 9093, "type": "internal", "tls": True}],
@@ -19,8 +19,8 @@ class KafkaCluster(KubeObject):
                         "offsets.topic.replication.factor": 1,
                         "transaction.state.log.replication.factor": 1,
                         "transaction.state.log.min.isr": 1,
-                        "log.message.format.version": "3.4",
-                        "inter.broker.protocol.version": "3.4"
+                        "log.message.format.version": "3.5",
+                        "inter.broker.protocol.version": "3.5"
                         },
                     "storage": {
                         "type": "jbod",

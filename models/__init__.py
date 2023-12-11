@@ -17,3 +17,4 @@ from .devspaces import Devspaces
 from .pipelines import Pipelines
 from .three_scale import ThreeScale
 from .camelk import Camelk
+from .gitops import Gitops

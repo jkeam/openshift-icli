@@ -3,6 +3,8 @@ kind: OpenshiftConfig
 spec:
   debug: true
   operators:
+    - name: gitops
+      enabled: false
     - name: devspaces
       enabled: false
     - name: pipelines

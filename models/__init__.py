@@ -18,3 +18,5 @@ from .pipelines import Pipelines
 from .three_scale import ThreeScale
 from .camelk import Camelk
 from .gitops import Gitops
+from .multi_cluster_hub import MultiClusterHub
+from .acm import Acm

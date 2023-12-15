@@ -1,5 +1,5 @@
 from kubernetes import client, config, utils
-from models import Serverless, Api, AmqStreams, Odf, Devspaces, ServerlessEventing, Pipelines, Parser, ThreeScale, Camelk, Gitops
+from models import Serverless, Api, AmqStreams, Odf, Devspaces, ServerlessEventing, Pipelines, Parser, ThreeScale, Camelk, Gitops, Acm
 from urllib3 import disable_warnings, exceptions
 disable_warnings(exceptions.InsecureRequestWarning)
 
@@ -12,6 +12,8 @@ def configure(debug: bool, api:Api, config:dict) -> (None|Devspaces|Pipelines|Od
 
     obj = None
     match name:
+        case "acm":
+            obj = Acm(api)
         case "argo" | "argocd" | "gitops":
             obj = Gitops(api)
         case "devspaces" | "devspace" | "crw":

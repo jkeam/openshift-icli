@@ -13,6 +13,8 @@ kind: OpenshiftConfig
 spec:
   debug: true
   operators:
+    - name: acm
+      enabled: true
     - name: gitops
       enabled: true
     - name: devspaces

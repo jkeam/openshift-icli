@@ -20,3 +20,5 @@ from .camelk import Camelk
 from .gitops import Gitops
 from .multi_cluster_hub import MultiClusterHub
 from .acm import Acm
+from .keycloak import Keycloak
+from .sso import Sso

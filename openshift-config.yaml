@@ -3,6 +3,8 @@ kind: OpenshiftConfig
 spec:
   debug: true
   operators:
+    - name: sso
+      enabled: false
     - name: acm
       enabled: false
     - name: gitops

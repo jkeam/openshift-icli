@@ -10,7 +10,11 @@ class CheCluster(KubeObject):
         self.namespace = "openshift-devspaces"
         self.kind = "CheCluster"
         self.spec = {
-                "components": {},
+                "components": {
+                    "pluginRegistry": {
+                        "openVSXURL": "https://open-vsx.org"
+                    }
+                },
                 "containerRegistry": {},
                 "devEnvironments": {},
                 "gitServices": {},

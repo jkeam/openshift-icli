@@ -52,7 +52,8 @@ class Api:
                 string_data=string_data)
         try:
             return self.core_api.create_namespaced_secret(namespace=namespace, body=secret)
-        except ApiException:
+        except ApiException as e:
+            print(e)
             return None
 
     def destroy_secret(self, name:str, namespace:str):

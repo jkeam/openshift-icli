@@ -55,6 +55,7 @@ class ThreeScale(Operator):
         super().install()
         self.apicast.install()
         self.secret.install()
+        # FIXME: polling condition for apicast prematurely exists and api manager is attempted to be installed before ready
         self.api_manager.install()
         secret_seed = Secret.read(self.api, "system-seed", self.namespace)
         admin_username = secret_seed.string_data.get("ADMIN_USER")

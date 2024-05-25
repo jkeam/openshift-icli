@@ -22,3 +22,5 @@ from .multi_cluster_hub import MultiClusterHub
 from .acm import Acm
 from .keycloak import Keycloak
 from .sso import Sso
+from .quay_registry import QuayRegistry
+from .quay import Quay

@@ -22,10 +22,10 @@ class Keycloak(KubeObject):
             "keycloakDeploymentSpec": {
                 "imagePullPolicy": "Always",
                 "experimental": {
-                    "env": {
+                    "env": [{
                         "name": "JAVA_TOOL_OPTIONS",
                         "value": "-Dcom.redhat.fips=false"
-                    }
+                    }]
                 }
             }
         }

@@ -33,13 +33,13 @@ class ThreeScaleApiManager(KubeObject):
 class ThreeScaleApicast(Operator):
     def __init__(self, api:Api) -> None:
         super().__init__(api, "apicast-operator", "3scale-project", True)
-        self.subscription.channel = "threescale-2.13"
+        self.subscription.channel = "threescale-2.14"
 
 class ThreeScale(Operator):
     def __init__(self, api:Api, config:dict) -> None:
         self.namespace = "3scale-project"
         super().__init__(api, "3scale-operator", self.namespace)
-        self.subscription.channel = "threescale-2.13"
+        self.subscription.channel = "threescale-2.14"
         self.apicast = ThreeScaleApicast(api)
 
         aws_config:dict[str, str] = config.get("aws", {})
@@ -64,6 +64,7 @@ class ThreeScale(Operator):
         admin_username = secret_seed.string_data.get("ADMIN_USER")
         admin_password = secret_seed.string_data.get("ADMIN_PASSWORD")
         print(f"\tusername: {admin_username}, password: {admin_password}, url: https://3scale-admin.{self.api_manager.wildcard_domain}")
+        print("Watch the pods in the 3scale-project namespace to ensure all pods are successfully created and running before attempting to log into 3scale.")
 
     def destroy(self) -> None:
         self.api_manager.destroy()

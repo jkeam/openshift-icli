@@ -10,3 +10,7 @@ class MultiClusterHub(KubeObject):
         self.name = "multiclusterhub"
         self.namespace = "open-cluster-management"
         self.kind = "MultiClusterHub"
+
+    def _ready(self, x:dict) -> bool:
+        is_ready = x.get("raw_object", {}).get("status", {}).get("phase", "not running").lower()
+        return is_ready == "running"

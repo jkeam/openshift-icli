@@ -8,14 +8,14 @@ class ServerlessObject(KubeObject):
         self.group = "operator.knative.dev"
         self.version = "v1beta1"
 
-class ServerlessServing(ServerlessObject):
+class ServerlessOpServing(ServerlessObject):
     def __init__(self, api:Api) -> None:
         super().__init__(api)
         self.name = "knative-serving"
         self.namespace = "knative-serving"
         self.kind = "KnativeServing"
 
-class ServerlessEventing(ServerlessObject):
+class ServerlessOpEventing(ServerlessObject):
     def __init__(self, api:Api) -> None:
         super().__init__(api)
         self.name = "knative-eventing"
@@ -25,8 +25,8 @@ class ServerlessEventing(ServerlessObject):
 class Serverless(Operator):
     def __init__(self, api:Api) -> None:
         super().__init__(api, "serverless-operator", "openshift-serverless")
-        self.serving = ServerlessServing(self.api)
-        self.eventing = ServerlessEventing(self.api)
+        self.serving = ServerlessOpServing(self.api)
+        self.eventing = ServerlessOpEventing(self.api)
 
     def install(self) -> None:
         super().install()

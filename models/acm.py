@@ -1,6 +1,7 @@
 from . import Api
 from . import Operator
 from . import MultiClusterHub
+from time import sleep
 
 class Acm(Operator):
     def __init__(self, api:Api) -> None:
@@ -13,6 +14,8 @@ class Acm(Operator):
     def install(self) -> None:
         self.api.create_namespace_if_not_exist(self.namespace)
         super().install()
+        # need to give time for new CRDs to be registered
+        sleep(10)
         self.hub.install()
 
     def destroy(self) -> None:

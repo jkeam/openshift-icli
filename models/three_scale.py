@@ -2,6 +2,7 @@ from . import Api
 from . import Operator
 from . import KubeObject
 from . import Secret
+from time import sleep
 
 class ThreeScaleApiManager(KubeObject):
     def __init__(self, api:Api, name:str, namespace:str, wildcard_domain:str, secret_name:str) -> None:
@@ -53,9 +54,11 @@ class ThreeScale(Operator):
 
     def install(self) -> None:
         super().install()
+        sleep(10)
         self.apicast.install()
+        sleep(10)
         self.secret.install()
-        # FIXME: polling condition for apicast prematurely exists and api manager is attempted to be installed before ready
+        sleep(10)
         self.api_manager.install()
         secret_seed = Secret.read(self.api, "system-seed", self.namespace)
         admin_username = secret_seed.string_data.get("ADMIN_USER")

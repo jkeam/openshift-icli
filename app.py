@@ -5,7 +5,7 @@ disable_warnings(exceptions.InsecureRequestWarning)
 
 config.load_kube_config()
 
-def configure(debug: bool, api:Api, config:dict) -> (None|Devspaces|Pipelines|Odf|Serverless|AmqStreams|ServerlessEventing):
+def configure(debug: bool, api:Api, config:dict, config_enabled_dict:dict[str:bool]) -> (None|Devspaces|Pipelines|Odf|Serverless|AmqStreams|ServerlessEventing):
     name = config.get("name", "UNKNOWN")
     if name == "UNKNOWN":
         return None
@@ -29,9 +29,10 @@ def configure(debug: bool, api:Api, config:dict) -> (None|Devspaces|Pipelines|Od
         case "amqstreams" | "kafka":
             obj = AmqStreams(api)
         case "serverless-eventing" | "knative-kafka":
-            # TODO: Error check this.
-            #   ServerlessEventing requires Serverless and AmqStreams to have been installed.
-            obj = ServerlessEventing(api)
+            # check to see if serverless and amqstreams is in list
+            serverless_enabled:bool = config_enabled_dict.get('serverless') or config_enabled_dict.get('knative')
+            amqstreams_enabled:bool = config_enabled_dict.get('amqstreams') or config_enabled_dict.get('kafka')
+            obj = ServerlessEventing(api, not serverless_enabled, not amqstreams_enabled)
         case "3scale" | "threescale" | "three-scale":
             obj = ThreeScale(api, config.get("spec", {}))
         case "camelk" | "camel-k":
@@ -58,5 +59,9 @@ if __name__ == "__main__":
     debug = spec.get("debug", False)
 
     api = Api(config, client, utils)
+    config_enabled_dict = dict(map(
+        lambda x: (x.get("name", "UNKNOWN"), x.get("enabled", False)),
+        spec.get("operators", [])
+    ))
     for operator in spec.get("operators", []):
-        configure(debug, api, operator)
+        configure(debug, api, operator, config_enabled_dict)

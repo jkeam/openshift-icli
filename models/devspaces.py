@@ -1,6 +1,7 @@
 from . import Api
 from . import Operator
 from . import CheCluster
+from time import sleep
 
 class Devspaces(Operator):
     def __init__(self, api:Api) -> None:
@@ -9,6 +10,8 @@ class Devspaces(Operator):
 
     def install(self) -> None:
         super().install()
+        # need to give time for new CRDs to be registered
+        sleep(10)
         self.che_cluster.install()
 
     def destroy(self) -> None:

@@ -9,8 +9,8 @@ from .operator_group import OperatorGroup
 from .subscription import Subscription
 from .operator import Operator
 from .serverless import Serverless
-from .serverless_eventing import ServerlessEventing
 from .amq_streams import AmqStreams
+from .serverless_eventing import ServerlessEventing
 from .odf import Odf
 from .che_cluster import CheCluster
 from .devspaces import Devspaces

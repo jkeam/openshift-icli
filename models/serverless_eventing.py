@@ -1,10 +1,11 @@
 from . import Api
 from . import KubeObject
+from . import Serverless
+from . import AmqStreams
 
 class ServerlessEventingEventing(KubeObject):
     def __init__(self, api:Api) -> None:
         super().__init__(api)
-        self.ready_text = "InstallSucceeded"
         self.group = "operator.knative.dev"
         self.version = "v1beta1"
         self.name = "knative-eventing"
@@ -51,12 +52,30 @@ class ServerlessEventingKafka(KubeObject):
                 }
 
 class ServerlessEventing:
-    def __init__(self, api:Api) -> None:
+    def __init__(self, api:Api, validate_serverless:bool, validate_amqstreams:bool) -> None:
         self.api = api
+        # not in openshift-config.yaml, need to check before install
+        self.validate_serverless = validate_serverless
+        self.validate_amqstreams = validate_amqstreams
         self.serverless_eventing_kafka = ServerlessEventingKafka(api)
         self.serverless_eventing_eventing = ServerlessEventingEventing(api)
 
     def install(self) -> None:
+        # validate
+        if self.validate_serverless:
+            serverless = Serverless(self.api)
+            eventing = serverless.eventing
+            existing = self.api.get_namespaced_custom_object(eventing.group, eventing.version, eventing.namespace, f"{eventing.kind.lower()}s", eventing.name)
+            if not existing:
+                raise Exception("Serverless is a required prerequisite")
+
+        if self.validate_amqstreams:
+            amqstreams = AmqStreams(self.api)
+            kafka = amqstreams.kafka
+            existing = self.api.get_namespaced_custom_object(kafka.group, kafka.version, kafka.namespace, f"{kafka.kind.lower()}s", kafka.name)
+            if not existing:
+                raise Exception("AMQ Streams is a required prerequisite")
+
         self.serverless_eventing_kafka.install()
         self.serverless_eventing_eventing.install()
 

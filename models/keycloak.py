@@ -30,7 +30,10 @@ class Keycloak(KubeObject):
             }
         }
 
+    def ready(self, x):
+        is_ready = x.get("raw_object", {}).get("status", {}).get("ready", "false")
+        return is_ready == "true" or is_ready
+
     def install(self) -> None:
         self.api.create_dynamic_object(self.group, self.version, self.kind, self.name, self.namespace, self.get_as_dict())
-        ready = lambda x: x.get("raw_object", {}).get("status", {}).get("ready", "false") == "true"
-        self.api.watch(self.group, self.version, self.kind, self.namespace, ready)
+        self.api.watch(self.group, self.version, self.kind, self.namespace, self.ready)
